@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: home.yandex.calculator.YandexCalculatorTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.443 sec - in home.yandex.calculator.YandexCalculatorTest
