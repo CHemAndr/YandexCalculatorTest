@@ -83,7 +83,7 @@ public class YandexCalculatorTest {
 
     @AfterAll
     public static void finished() {
-        //driver.close();
+        driver.close();
     }
 }
 

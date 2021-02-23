@@ -13,12 +13,15 @@ import java.util.Map;
 public class ResultSearchPage {
 
     public WebDriver driver;
-    List<WebElement> calculatorButtonsPanelURL;
-    List<WebElement> calculatorButtonsOnFirstRowURL;
-    List<WebElement> calculatorButtonsOnSecondRowURL;
-    List<WebElement> calculatorButtonsOnThirdRowURL;
-    List<WebElement> calculatorButtonsOnFourthRowURL;
-    List<WebElement> calculatorButtonsOnFifthRowURL;
+    List<WebElement> calculatorButtonsPanelURL;       //Панель кнопок
+    List<WebElement> calculatorButtonsOnFirstRowURL;  //Первая строка кнопок на панели
+    List<WebElement> calculatorButtonsOnSecondRowURL; //Вторая строка кнопок на панели
+    List<WebElement> calculatorButtonsOnThirdRowURL;  //Третья строка кнопок на панели
+    List<WebElement> calculatorButtonsOnFourthRowURL; //Четвертая строка кнопок на панели
+    List<WebElement> calculatorButtonsOnFifthRowURL;  //Пятая строка кнопок на панели
+    WebElement calculatorScreen;                      //Экран калькулятора
+    WebElement resultStringOnScreen;                  //Результат вычисления
+
     Map<String,Integer> calculatorBbuttonsNames;
     
 
@@ -36,61 +39,39 @@ public class ResultSearchPage {
     @FindBy(xpath = "//ul[@id = 'search-result']/li")
     public WebElement calculator;
 
-
-
     //======================методы работы с элементами ================================
 
     //Нажать кнопку калькулятора c именем buttonName
     public void clickButton(String buttonName) {
-        // Кнопки из первой строки
-        if (buttonName.equals("/")) {
-            calculatorButtonsOnFirstRowURL.get(6).click();}
-        if (buttonName.equals("C")) {
-            calculatorButtonsOnFirstRowURL.get(3).click();}
-        // Кнопки из второй строки
-        if (buttonName.equals("7")) {
-            calculatorButtonsOnSecondRowURL.get(3).click();}
-        if (buttonName.equals("8")) {
-            calculatorButtonsOnSecondRowURL.get(4).click();}
-        if (buttonName.equals("9")) {
-            calculatorButtonsOnSecondRowURL.get(5).click();}
-        if (buttonName.equals("*")) {
-            calculatorButtonsOnSecondRowURL.get(6).click();}
-        // Кнопки из третьей строки
-        if (buttonName.equals("4")) {
-            calculatorButtonsOnThirdRowURL.get(3).click();}
-        if (buttonName.equals("5")) {
-            calculatorButtonsOnThirdRowURL.get(4).click();}
-        if (buttonName.equals("6")) {
-            calculatorButtonsOnThirdRowURL.get(5).click();}
-        if (buttonName.equals("sqrt")) {
-            calculatorButtonsOnThirdRowURL.get(2).click();}
-        if (buttonName.equals("cos")) {
-            calculatorButtonsOnThirdRowURL.get(1).click();}
-        // Кнопки из четвертой строки
-        if (buttonName.equals("1")) {
-            calculatorButtonsOnFourthRowURL.get(3).click();}
-        if (buttonName.equals("2")) {
-            calculatorButtonsOnFourthRowURL.get(4).click();}
-        if (buttonName.equals("3")) {
-            calculatorButtonsOnFourthRowURL.get(5).click();}
-        // Кнопки из пятой строки
-        if (buttonName.equals("0")) {
-            calculatorButtonsOnFifthRowURL.get(3).click();}
-        if (buttonName.equals("=")) {
-            calculatorButtonsOnFifthRowURL.get(5).click();}
-        if (buttonName.equals(",")) {
-            calculatorButtonsOnFifthRowURL.get(4).click();}
-        if (buttonName.equals("pi")) {
-            calculatorButtonsOnFifthRowURL.get(1).click();}
+        //Индекс кнопки в строку
+        int buttonIndex = calculatorBbuttonsNames.get(buttonName) % 10 ;
+        //Выбор кноки по номеру строки и индексу кнопки с этой строке
+        switch (calculatorBbuttonsNames.get(buttonName) / 10) {
+            case 1:
+                calculatorButtonsOnFirstRowURL.get(buttonIndex).click();
+                break;
+            case 2:
+                calculatorButtonsOnSecondRowURL.get(buttonIndex).click();
+                break;
+            case 3:
+                calculatorButtonsOnThirdRowURL.get(buttonIndex).click();
+                break;
+            case 4:
+                calculatorButtonsOnFourthRowURL.get(buttonIndex).click();
+                break;
+            case 5:
+                calculatorButtonsOnFifthRowURL.get(buttonIndex).click();
+                break;
+        }
     }
 
     //Получение результата вычисления
     public String getCalculateResult() {
         //Экран калькулятора
-        WebElement calculatorScreen = calculator.findElement(By.xpath(".//div[@class = 'calculator__screen']"));
-        return calculatorScreen
-                .findElement(By.xpath(".//span[@class = 'calculator-display__result']")).getAttribute("innerHTML");
+        //WebElement calculatorScreen = calculator.findElement(By.xpath(".//div[@class = 'calculator__screen']"));
+        //return calculatorScreen
+        //        .findElement(By.xpath(".//span[@class = 'calculator-display__result']")).getAttribute("innerHTML");
+        return resultStringOnScreen.getAttribute("innerHTML");
     }
 
     //Проверка на существование Яндекс калькулятора
@@ -107,20 +88,27 @@ public class ResultSearchPage {
     }
 
     public void initCalculatorElements() {
+        //Локатор экрана калькулятора
+        calculatorScreen = calculator.findElement(By.xpath(".//div[@class = 'calculator__screen']"));
+        //Локатор результата на экране калькулятора
+        resultStringOnScreen = calculatorScreen
+                               .findElement(By.xpath(".//span[@class = 'calculator-display__result']"));
         //Панель кнопок калькулятора
         calculatorButtonsPanelURL = calculator
                 .findElements(By.xpath(".//div[@class = 'calculator__row']"));
-        //Первая строка кнопок панели
+        //Локатор первой строки кнопок на панели
         calculatorButtonsOnFirstRowURL = calculatorButtonsPanelURL.get(0).findElements(By.tagName("button"));
-        //Вторая строка кнопок панели
+        //Локатор второй строки кнопок на панели
         calculatorButtonsOnSecondRowURL = calculatorButtonsPanelURL.get(1).findElements(By.tagName("button"));
-        //Третия строка кнопок панели
+        //Локатор третьей строки кнопок на панели
         calculatorButtonsOnThirdRowURL = calculatorButtonsPanelURL.get(2).findElements(By.tagName("button"));
-        //Четвертая строка кнопок панели
+        //Локатор четвертой строки кнопок на панели
         calculatorButtonsOnFourthRowURL = calculatorButtonsPanelURL.get(3).findElements(By.tagName("button"));
-        //Пятая строка кнопок панели
+        //Локатор пятой строки кнопок на панели
         calculatorButtonsOnFifthRowURL = calculatorButtonsPanelURL.get(4).findElements(By.tagName("button"));
-        //Кнопки
+        //Кнопки <имя кнопки, индекс кнопки на панели кнопок>
+        //Старший разряд индекса  - номер строки кнопок на панели (1..5)
+        //Младший разряд индекса - индекс кнопки в строке (0..7)
         calculatorBbuttonsNames = new HashMap<>();
         calculatorBbuttonsNames.put("xpy",10);
         calculatorBbuttonsNames.put("x!",11);
@@ -156,6 +144,5 @@ public class ResultSearchPage {
         calculatorBbuttonsNames.put("0",53);
         calculatorBbuttonsNames.put(",",54);
         calculatorBbuttonsNames.put("=",55);
-
     }
 }
